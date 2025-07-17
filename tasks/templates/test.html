@@ -1,0 +1,30 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <p class="lal-bg">Hello Test</p>
+    <br> <br> 
+     <img src="{% static 'images/ad2.jpg' %}" alt="">
+     <br> <br>
+     <ul>
+         {% for name in names %}
+         {% if not name == 'kobita' %}
+        <li>
+             <p>{{name}}</p>
+        </li>
+        {% endif %}
+      {% endfor %}
+     </ul>
+     {% with 100 as price %}
+    <p>Price: {{ price }}</p>
+{% endwith %}
+    
+</html>
