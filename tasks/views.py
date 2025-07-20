@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from tasks.forms import TaskForm,TaskModelForm
+from tasks.forms import TaskForm,TaskModelForm, TaskDetailModelForm
 from tasks.models import Employee, Task, TaskDetail, Project
 from datetime import date
 from django.db.models import Count, Max, Min, Avg, Sum, Q
+from django.contrib import messages
+
 
  
 def manager_dashboard(request):
@@ -61,15 +63,21 @@ def test(request):
 
 
 def create_task(request):
-    employees = Employee.objects.all()
-    form = TaskModelForm()
+    # employees = Employee.objects.all()
+    task_form = TaskModelForm()
+    task_detail_form = TaskDetailModelForm() # for GET ER JONNO
 
 
     if request.method =="POST":
-        form = TaskModelForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'task_form.html',{'form': form, 'message':'Task added successfully'} )
+        task_form = TaskModelForm(request.POST)
+        task_detail_form = TaskDetailModelForm(request.POST) # FOR POST ER JONNO
+        if task_form.is_valid() and task_detail_form.is_valid():
+            task = task_form.save()
+            task_detail = task_detail_form.save(commit=False)
+            task_detail.task = task
+            task_detail.save()
+            messages.success( request, "Task Created Successfully")
+            return redirect('create_task')
 
             """For Model Form Data"""
 
@@ -88,9 +96,66 @@ def create_task(request):
 
 
     context = {
-       "form":  form
+       "task_form":  task_form , "task_detail_form": task_detail_form
     }
     return render(request, "task_form.html", context)
+
+'''update task start'''
+
+def update_task(request , id):
+   
+    # employees = Employee.objects.all()
+    task = Task.objects.get(id=id)
+    task_form = TaskModelForm(instance= task)
+    if task.details:
+        task_detail_form = TaskDetailModelForm(instance=task.details) # for GET ER JONNO
+
+
+    if request.method =="POST":
+        task_form = TaskModelForm(request.POST, instance= task)
+        task_detail_form = TaskDetailModelForm(request.POST , instance=task.details) # FOR POST ER JONNO
+        if task_form.is_valid() and task_detail_form.is_valid():
+            task=task_form = task_form.save()
+            task_detail = task_detail_form.save(commit=False)
+            task_detail.task = task
+            task_detail_form.save()
+            messages.success( request, "Task Updated Successfully")
+            return redirect('update_task', id)
+
+            """For Model Form Data"""
+
+            '''For Django Form Data'''
+            # data = form.cleaned_data
+            # title = data.get('title')
+            # description = data.get('description')
+            # due_date = data.get('due_date')
+            # assigned_to = data.get('assigned_to') # list[1 ,3]
+            # task = Task.objects.create(title = title, description=description, due_date = due_date)
+            # # Assign employee to tasks
+            # for emp_id in assigned_to:
+            #     employee = Employee.objects.get(id=emp_id)
+            #     task.assigned_to.add(employee)
+            # return HttpResponse("Task Added Successfully")
+
+
+    context = {
+       "task_form":  task_form , "task_detail_form": task_detail_form
+    }
+    return render(request, "task_form.html", context)
+
+def delete_task(request, id):
+    if request.method == "POST":
+        task = Task.objects.get(id=id)
+        task.delete()
+        messages.success(request, "Task Deleted successfully")
+        return redirect('manager_dashboard')
+    else:
+        messages.error(request, "Something has Wrong")
+        return redirect('manager_dashboard')
+         
+    
+
+
 def view_task(request):
     # tasks = Task.objects.select_related('details').all()
     # tasks = Task.objects.filter(title__icontains="c")
