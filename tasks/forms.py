@@ -17,6 +17,10 @@ class TaskForm(forms.Form):
 
 # mixing  to apply style to form field
 class StyleFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_styled_widgest()
+
     default_classes = "border-2 border-gray-300 w-full rounded-lg shadow-sm focus: border-rose-300 focus: ring-rose-300"
     def apply_styled_widgest(self):
         for field_name, field in self.fields.items():
@@ -95,6 +99,4 @@ class TaskDetailModelForm(StyleFormMixin,forms.ModelForm):
         model = TaskDetail
         fields = ['priority', 'notes']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.apply_styled_widgest()
+   

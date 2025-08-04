@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Wellcome to the home page</h1>
+    <p>The beautiful name is better than a lot of wealth. <br> Bangladesh is a beautifull country.</p>
+    {% if user.is_authenticated %}
+    {{user}}
+    <form action=" {% url 'logout' %}" method='POST'>
+        {% csrf_token %}
+
+        <button type='submit'>Logout</button>
+
+    </form>
+    {% else %}
+
+        Annonymous
+    
+    {% endif %}
+</body>
+</html>

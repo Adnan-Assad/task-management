@@ -3,9 +3,6 @@
 
 {% block tasks %}
 
-
-
-
 <!-- Task Table  -->
         <div class="bg-white rounded-xl shadow-sm">
           <div
@@ -24,8 +21,8 @@
               <div class="flex items-center gap-2">
                 <div class="w-2 h-2 rounded-full bg-green-500"></div>
                 <span class=''>{{task.title}}</span>
-                </form>
-                </form>
+                
+                
                 <a href="{% url 'update_task' task.id %}" class="px-2 py-1 bg-green-500" >Edit</a>
                 <form action="{% url 'delete_task' task.id %}" method = "POST">
                   {% csrf_token %}
@@ -59,3 +56,7 @@
         </div>
 
         {% endblock tasks %}
+
+
+
+ 
