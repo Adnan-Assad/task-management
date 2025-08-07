@@ -13,13 +13,13 @@
     <h1>Wellcome to the Authentication System</h1>
     <div>
         {% if form.non_field_errors %}
-            <div>
+            
                  {% for error in form.non_field_errors %}
                  <p >{{error}} </p>
             
            
         {% endfor %}
-        </div>
+         
         {% endif %}
         <form action="" method="POST">
             {% csrf_token %}
@@ -41,7 +41,7 @@
         </p>
            
            {% endfor %}
-            <button type="submit">Sign Up</button>
+            <button class='bg-red-500 px-2 py-2 rounded-md mt-3' type="submit">Sign Up</button>
         </form>
     </div>
 </body>

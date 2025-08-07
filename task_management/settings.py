@@ -151,3 +151,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
  
 
 # "omhf wurt fwnk etjh"
+
+
+FRONTEND_URL = 'http://127.0.0.1:8000'
+LOGIN_URL = 'sign_in'

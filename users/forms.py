@@ -1,8 +1,9 @@
 from django import forms
 import re
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission, Group
 from tasks.forms import StyleFormMixin
+from django.contrib.auth.forms import AuthenticationForm
 
 class RegisterForm(UserCreationForm):
     class Meta:
@@ -59,3 +60,20 @@ class CustomRegistrationForm(StyleFormMixin,forms.ModelForm):
         if password and confirm_password and  password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
         return cleaned_data
+    
+
+class loginForm(StyleFormMixin , AuthenticationForm):
+    def __init__(self, *arg, **kwargs):
+        super().__init__(*arg, **kwargs)
+
+class AssignRoleForm(StyleFormMixin, forms.Form):
+    role = forms.ModelChoiceField(queryset=Group.objects.all(), empty_label="Select a Role")
+
+
+class CreateGroupForm(StyleFormMixin, forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), widget =forms.CheckboxSelectMultiple, required = False, label ='Assign Permission')
+
+    class Meta:
+        model = Group
+        fields = ['name', 'permissions']
+     
